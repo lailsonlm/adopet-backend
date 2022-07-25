@@ -59,13 +59,24 @@ app.get('/', (req, res) => {
 app.get('/users/:id', checkToken, findUserById, async (req, res) => {
   const { user } = req;
 
-  return res.json(user);
+  res.status(200).json({
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      github: user.github, 
+      phone: user.phone,
+      city: user.city, 
+      about: user.about
+    }
+  })
 })
 
 app.put('/users/:id', checkToken, findUserById, async (req, res) => {
-  const { github, phone, city, about } = req.body;
+  const { name, github, phone, city, about } = req.body;
   const { user } = req;
 
+  user.name = name;
   user.github = github;
   user.phone = phone;
   user.city = city;
@@ -77,7 +88,7 @@ app.put('/users/:id', checkToken, findUserById, async (req, res) => {
     res.status(201).json({
       success: "Usuário atualizado com sucesso!",
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         github: user.github, 
@@ -101,7 +112,7 @@ app.put('/users/:id', checkToken, findUserById, async (req, res) => {
 
 
 app.post('/signup', async(req, res) => {
-  const { name, email, password, github, phone, city, about } = req.body
+  const { name, email, password } = req.body
 
   if(!name) {
     return res.status(422).json({
@@ -144,7 +155,7 @@ app.post('/signup', async(req, res) => {
     const secret = process.env.JWT_SECRET
 
     const accessToken = jwt.sign({
-      id: user._id,
+      id: user.id,
     }, secret , {
       expiresIn: '24h'
     })
@@ -153,7 +164,7 @@ app.post('/signup', async(req, res) => {
       success: "Usuário cadastrado com sucesso!",
       accessToken,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
       }
@@ -206,7 +217,7 @@ app.post('/login', async (req, res) => {
     const secret = process.env.JWT_SECRET
 
     const accessToken = jwt.sign({
-      id: user._id,
+      id: user.id,
     }, secret , {
       expiresIn: '24h'
     })
@@ -215,7 +226,7 @@ app.post('/login', async (req, res) => {
       success: "Usuário Autenticado!",
       accessToken,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         github: user.github, 
