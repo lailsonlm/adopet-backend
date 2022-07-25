@@ -2,10 +2,9 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors')
-const mongoose = require('mongoose')
+
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
 
 const app = express()
 
@@ -247,12 +246,4 @@ app.post('/login', async (req, res) => {
 
 })
 
-
-const dbUser = process.env.DB_USER
-const dbPassword = process.env.DB_PASS
-
-mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@adopet.4mysvl1.mongodb.net/?retryWrites=true&w=majority`)
-.then(() => {
-  app.listen(3333, () => console.log('Server is running in PORT 3333!'))
-})
-.catch((error) => console.log(error))
+module.exports = app;
